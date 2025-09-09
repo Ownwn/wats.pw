@@ -1,4 +1,4 @@
-package com.ownwn.wats.problems;
+package com.ownwn.wats;
 
 import java.io.File;
 import java.io.IOException;

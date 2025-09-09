@@ -4,6 +4,6 @@ public class Main {
     }
 
     public static String stuff() {
-        return "unlocked door"; 
+         
     }
 }

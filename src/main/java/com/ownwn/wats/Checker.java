@@ -1,4 +1,4 @@
-package com.ownwn.wats.problems;
+package com.ownwn.wats;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
