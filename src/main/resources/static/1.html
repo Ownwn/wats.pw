@@ -10,10 +10,42 @@
             top: 0;
             right: 0;
             bottom: 0;
-            left: 20%;
+            left: 40%;
             width: 50%;
             border: 10px solid white;
             margin: 10px;
+            height: 60%;
+        }
+
+        .but {
+            position: absolute;
+            left: 43%;
+            bottom: 32%;
+            width: 150px;
+            height: 50px;
+        }
+
+        .console {
+            position: absolute;
+            left: 0;
+            bottom: -50px;
+            height: 400px;
+            width: 100%;
+            background-color: #747474;
+            text-align: center;
+            font-size: 50px;
+        }
+
+        .preview {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 700px;
+            height: 60%;
+            background-color: #949494;
+            font-size: 20px;
+            padding: 10px;
+            white-space: pre;
         }
 
 
@@ -23,34 +55,67 @@
     </style>
 </head>
 <body>
-<h1>problem one!!!</h1>
 
-<div id="editor">
-var str = "hello world";
-</div>
+<div id="editor"></div>
 <br>
 <br>
 
-<button onclick="foo()">button!</button>
+<pre class="preview"></pre>
+
+<button class="but" onclick="foo()">button!</button>
+<p class="console"></p>
 </body>
 </html>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ace.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ace.min.js" type="text/javascript"
+        charset="utf-8"></script>
 <script>
     let editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/java");
     editor.setOption("keyboardHandler", "ace/keyboard/sublime")
+    document.getElementById('editor').style.fontSize='20px';
+
+
+    updatePreview(editor.getValue())
+    editor.session.on('change', function() {
+        updatePreview(editor.getValue())
+    });
+
+
+
+    function updatePreview(content) {
+        const template = "public class Main {\n" +
+            "    public static void main(String[] args) {\n" +
+            "        assert stuff().equals(\"unlocked door\");\n" +
+            "    }\n" +
+            "\n" +
+            "    public static String stuff() {\n" +
+            "        TARGET REPLACEMENT 473882928347567473734\n" +
+            "    }\n" +
+            "}"
+
+        const replacement = template.replace("TARGET REPLACEMENT 473882928347567473734", content.trim() === "" ? "[???]" : content.trim())
+
+        document.querySelector('.preview').textContent = replacement
+    }
+
+
 
     async function foo() {
         let ans = editor.getValue();
+        setResponse("Loading...")
 
 
         let response = await fetch("check", {
             method: "POST",
-            body: ans
+            body: ans + " "
         })
-        console.log("response is " + await response.text());
+        setResponse(await response.text());
+    }
+
+    function setResponse(response) {
+        document.querySelector('.console').innerText  = response
     }
 
 </script>
