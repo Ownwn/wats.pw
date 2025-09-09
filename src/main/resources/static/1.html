@@ -3,11 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Problem 1</title>
+
+    <style type="text/css" media="screen">
+        #editor {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 20%;
+            width: 50%;
+            border: 10px solid white;
+            margin: 10px;
+        }
+
+
+        html {
+            background-color: #2f2f2f;
+        }
+    </style>
 </head>
 <body>
 <h1>problem one!!!</h1>
 
-<textarea placeholder="Answer here" id="answer">my area here</textarea>
+<div id="editor">
+var str = "hello world";
+</div>
 <br>
 <br>
 
@@ -15,11 +35,22 @@
 </body>
 </html>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ace.min.js" type="text/javascript" charset="utf-8"></script>
 <script>
-    function foo() {
-        let ans = document.getElementById("answer").value;
-        console.log("ans is " + ans);
-    }
+    let editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/java");
+    editor.setOption("keyboardHandler", "ace/keyboard/sublime")
 
+    async function foo() {
+        let ans = editor.getValue();
+
+
+        let response = await fetch("check", {
+            method: "POST",
+            body: ans
+        })
+        console.log("response is " + await response.text());
+    }
 
 </script>
