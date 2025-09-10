@@ -90,10 +90,11 @@ public class Checker {
     }
 
     public void writeLog(String input) {
+        String logText = System.currentTimeMillis() + "\n" + input + "\n\n============\n";
         try {
             Files.writeString(
                     dockerPath.resolve(logFile),
-                    System.currentTimeMillis() + "\n" + input + "\n\n============",
+                    logText,
                     StandardOpenOption.CREATE,
                     StandardOpenOption.APPEND);
         } catch (IOException e) {
