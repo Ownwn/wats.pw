@@ -2,22 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tricky WATs</title>
 </head>
 <body>
-<h1>home page!!!!</h1>
-
-<a href="1">Intro (1)</a>
-<br>
-<a href="2">Boxed (2)</a>
-<br>
-<a href="3">Zip Stacks (3)</a>
+    <h1>WATs for "Practise"</h1>
+    <main>
+        <nav class="questions">
+            <ul>
+                <li><a href="1">1 Intro</a></li>
+                <li><a href="2">2 Boxed</a></li>
+                <li><a href="3">3 Zip Stacks</a></li>
+                <li><p>More coming soon</p></li>
+            </ul>
+        </nav>
+    </main>
 </body>
 </html>
 
 <style>
 
-    a {
-        font-size: 40px;
+    html, body {
+        height: 100%;
+    }
+    body {
+        background-color: #141414;
+
+        font-family: Arial, sans-serif;
+        margin: 0;
+
+        display: grid;
+        justify-items: center;
+
+        background-image: radial-gradient(circle at 15% 15%, hsla(0, 100%, 35%, 0.2), transparent 40%),
+        radial-gradient(circle at 85% 75%, hsla(0, 100%, 28%, 0.15), transparent 40%);
+
+        background-repeat: no-repeat;
+    }
+
+    h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        opacity: 80%;
+        background: linear-gradient(90deg, #d90a0a, #860000);
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+
+    }
+
+
+    .questions ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .questions a, p {
+        display: flex;
+        align-items: center;
+        padding: 1.25rem 1.5rem;
+        text-decoration: none;
+        font-size: 1.25rem;
+        color: #e0e0e0;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(230,230,230, 0.1);
+        border-radius: 12px;
     }
 </style>
