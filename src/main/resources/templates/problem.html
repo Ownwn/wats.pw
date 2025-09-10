@@ -99,11 +99,12 @@
 
 
     async function foo() {
+        const id = /*[[${id}]]*/ 'UNKNOWN'
         let ans = editor.getValue();
         setResponse("Loading...")
 
 
-        let response = await fetch("check", {
+        let response = await fetch("check?id=" + id, {
             method: "POST",
             body: ans + " "
         })
