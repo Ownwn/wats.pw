@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -18,12 +19,13 @@ public class Checker {
     private static final AtomicLong lastRequest = new AtomicLong(0);
     private static final Path dockerPath = Paths.get("dock").toAbsolutePath();
     private static final String runName = "RunMe.java";
+    private static final String logFile = "logs.txt";
     private static final String target = "TARGET REPLACEMENT 473882928347567473734";
 
 
     @PostMapping("check")
     public String check(@RequestBody String input, String id) {
-        if (input == null || id == null) {
+        if (input == null || id == null || input.length() > 1500 || id.length() > 1500) {
             return "Bad request";
         }
 
@@ -52,7 +54,10 @@ public class Checker {
 
         Command dockerCommand = buildCommand(mountArg);
 
+        writeLog(input);
         String res = dockerCommand.run(dockerPath.toFile());
+
+
 
         if (res.isBlank()) {
             return "OK!";
@@ -81,6 +86,18 @@ public class Checker {
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    public void writeLog(String input) {
+        try {
+            Files.writeString(
+                    dockerPath.resolve(logFile),
+                    System.currentTimeMillis() + "\n" + input + "\n\n============",
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

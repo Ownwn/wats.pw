@@ -32,4 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 dock/RunMe.java
+dock/logs.txt
 
