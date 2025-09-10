@@ -82,20 +82,28 @@
         updatePreview(editor.getValue())
     });
 
+    function fixIndents(content, template) {
+        return content.split("\n").map(l => getReplacementIndent(template) + l).join("\n")
+    }
 
+    function getReplacementIndent(template) {
+        let indentLength = template.split("\n").filter(l => l.includes("TARGET REPLACEMENT 473882928347567473734"))[0].replace("TARGET REPLACEMENT 473882928347567473734", "").length
+        return " ".repeat(indentLength)
+    }
 
     function updatePreview(content) {
         const template = /*[[${challenge}]]*/ ''
 
         if (!template) {
-            throw new Error("Failed to load templaate!")
+            throw new Error("Failed to load template!")
         }
 
-        const replacement = template.replace("TARGET REPLACEMENT 473882928347567473734", content.trim() === "" ? "[???]" : content.trim())
+        let userInputCleaned = content.trim() === "" ? getReplacementIndent(template) + "[???]" : fixIndents(content.trim(), template)
+
+        const replacement = template.replace(RegExp(" *TARGET REPLACEMENT 473882928347567473734 *"), userInputCleaned)
 
         document.querySelector('.preview').textContent = replacement
     }
-
 
 
     async function foo() {
