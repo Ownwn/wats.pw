@@ -161,6 +161,8 @@ public class Checker {
                 "run",
                 "--rm",
                 "-v", mountArg,
+                "--memory=150mb",
+                "--cpus=.5",
                 "java-executor",
                 "sh",
                 "-c",
