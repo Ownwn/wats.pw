@@ -111,7 +111,7 @@ public class Checker {
                 "java-executor",
                 "sh",
                 "-c",
-                "javac Main.java && java -ea Main"
+                "timeout 5s javac Main.java && timeout 5s java -ea Main"
         );
     }
 }
