@@ -12,6 +12,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -22,11 +24,62 @@ public class Checker {
     private static final String logFile = "logs.txt";
     private static final String target = "TARGET REPLACEMENT 473882928347567473734";
 
+    private static final Set<String> blacklistedKeywords = Set.of(
+            "Robot",
+            "getProperty",
+            "env()",
+            "gc()",
+            "exit()",
+            "loadLibrary(",
+            "setErr(",
+            "ecurityManager",
+            "setPropert",
+            "console()",
+            "ClassLoader",
+            "Deprecated",
+            "LiveStackF",
+            "ModuleLayer",
+            "NamedPacka",
+            "ProcessB",
+            "Shutdown",
+            "Terminator",
+            "Thread",
+            "foreign",
+            "invoke",
+            "reflect",
+            "security",
+            "sun.",
+            "System.set",
+            "MethodHandles",
+            ".forName",
+            "File",
+            "Process",
+            "Path",
+            "URL",
+            "InetA",
+            "Socket",
+            "AccessibleObject",
+            "Field",
+            "Constructor",
+            "setAccessible",
+            "getDeclared",
+            "Unsafe",
+            "Finalizer",
+            "Clean",
+            "Native",
+            "native",
+            "JNI",
+            "exec("
+    );
 
     @PostMapping("check")
     public String check(@RequestBody String input, String id) {
         if (input == null || id == null || input.length() > 1500 || id.length() > 1500) {
             return "Bad request";
+        }
+        Optional<String> bannedWord = blacklistedKeywords.stream().filter(input::contains).findAny();
+        if (bannedWord.isPresent()) {
+            return "Blacklisted word \"" + bannedWord.get() + "\"";
         }
 
         int questionId;
