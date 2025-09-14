@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -77,10 +75,6 @@ public class Checker {
         if (input == null || id == null || input.length() > 1500 || id.length() > 1500) {
             return "Bad request";
         }
-        Optional<String> bannedWord = blacklistedKeywords.stream().filter(input::contains).findAny();
-        if (bannedWord.isPresent()) {
-            return "Blacklisted word \"" + bannedWord.get() + "\"";
-        }
 
         int questionId;
         try {
@@ -95,6 +89,13 @@ public class Checker {
         lastRequest.set(System.currentTimeMillis());
 
         Template template = new Template(questionId, input);
+
+        Optional<String> bannedWord = template.getBannedWord();
+        if (bannedWord.isPresent()) {
+            return "Blacklisted word \"" + bannedWord.get() + "\"";
+        }
+
+
         template.writeIntoTemplateFile();
 
         Path targetPath = dockerPath.resolve(runName);
@@ -111,34 +112,10 @@ public class Checker {
         String res = dockerCommand.run(dockerPath.toFile());
 
 
-
         if (res.isBlank()) {
             return "OK!";
         } else {
             return res;
-        }
-    }
-
-    record Template(int id, String userInput) {
-        public void writeIntoTemplateFile() {
-            String templateCode = findTemplate(id);
-
-            try {
-                Files.writeString(dockerPath.resolve(runName), templateCode.replaceFirst(target, userInput));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        private String findTemplate(int id) {
-            try {
-                Class<?> clazz = Class.forName("com.ownwn.wats.problems.Problem" + id);
-                Field field = clazz.getDeclaredField("challenge");
-                return field.get(clazz).toString();
-
-            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 
@@ -168,5 +145,46 @@ public class Checker {
                 "-c",
                 "timeout 5s javac Main.java && timeout 5s java -ea Main"
         );
+    }
+
+    record Template(int id, String userInput) {
+        public void writeIntoTemplateFile() {
+            String templateCode = findTemplate();
+
+            try {
+                Files.writeString(dockerPath.resolve(runName), templateCode.replaceFirst(target, userInput));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        private String findTemplate() {
+            try {
+                Class<?> clazz = Class.forName("com.ownwn.wats.problems.Problem" + id);
+                Field field = clazz.getDeclaredField("challenge");
+                return field.get(clazz).toString();
+
+            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private Optional<String> getBannedWord() {
+            Optional<String> bannedWord = blacklistedKeywords.stream().filter(userInput::contains).findAny();
+            if (bannedWord.isPresent()) return bannedWord;
+
+            try {
+                Class<?> clazz = Class.forName("com.ownwn.wats.problems.Problem" + id);
+                Field field = clazz.getDeclaredField("banned");
+
+                return ((Set<String>) field.get(clazz)).stream().filter(userInput::contains).findAny();
+
+            } catch (ClassNotFoundException | IllegalAccessException | ClassCastException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchFieldException e) {
+                return Optional.empty();
+            }
+        }
     }
 }
