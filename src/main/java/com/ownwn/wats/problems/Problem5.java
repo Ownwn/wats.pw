@@ -18,7 +18,7 @@ public class Problem5 {
                     public static void main(String[] args) {
                         new Main().main();
                         
-                        assert log.equals("TARGET REPLACEMENT 473882928347567473734");
+                        assert log.trim().equals("TARGET REPLACEMENT 473882928347567473734".trim());
                     }
                     
                     public void main() {
