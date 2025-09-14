@@ -37,7 +37,9 @@
     }
 
     function getReplacementIndent(template) {
-        let indentLength = template.split("\n").filter(l => l.includes("TARGET REPLACEMENT 473882928347567473734"))[0].replace("TARGET REPLACEMENT 473882928347567473734", "").length
+        let enclosingLine = template.split("\n").filter(l => l.includes("TARGET REPLACEMENT 473882928347567473734"))[0].replace("TARGET REPLACEMENT 473882928347567473734", "")
+        console.log(enclosingLine)
+        let indentLength = enclosingLine.trim().length !== 0 ? 0 : enclosingLine.length;
         return " ".repeat(indentLength)
     }
 
