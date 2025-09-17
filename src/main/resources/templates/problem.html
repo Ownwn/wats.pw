@@ -7,7 +7,7 @@
 <body>
 
 <div id="editorsBox">
-    <pre class="console">PRE VIEW RESPONSE</pre>
+    <pre class="console"></pre>
     <div id="editorpreview" class="editors"></div>
     <div id="editorinput" class="editors"></div>
 </div>
@@ -64,6 +64,7 @@
         let ans = editorInput.getValue();
         setResponse("Loading...")
         document.querySelector('.button').innerText  = "Loading..."
+        setConsoleBackground("#959595")
 
         let response = await fetch("check?id=" + id, {
             method: "POST",
@@ -72,9 +73,16 @@
         setResponse(await response.text());
     }
 
+    function setConsoleBackground(colour) {
+        document.querySelector('.console').style.backgroundColor = colour;
+    }
+
     function setResponse(response) {
         document.querySelector('.button').innerText  = "Submit"
-        document.querySelector('.console').innerText  = response
+        const ok = response === "OK!"
+       document.querySelector('.console').innerText = ok ? "Success!" : response;
+        setConsoleBackground(ok ? "green" : "red")
+
     }
 
     function styleEditor(editor) {
@@ -149,7 +157,7 @@
     }
 
     .console {
-        background-color: red;
+        background-color: #4a4a4a;
         padding: 10px;
         font-size: 20px;
 

@@ -45,7 +45,7 @@ record Command(String name, String... args) {
         try {
             return runCommand(this, directory);
         } catch (Exception e) {
-            return e.toString();
+            return "Error running command!\n" + e;
         }
     }
 
