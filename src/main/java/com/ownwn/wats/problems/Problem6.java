@@ -10,7 +10,7 @@ import java.util.Set;
 @Controller
 public class Problem6 {
     @SuppressWarnings("unused")
-    public static final Set<String> banned = Set.of("toString()", "\"");
+    public static final Set<String> banned = Set.of("toString()", "\"", "if", "getClass", "try", "do", "while", "?", "&&", "||", "^");
     public static final String challenge = """
                 import java.util.function.*;
                 public class Main {
