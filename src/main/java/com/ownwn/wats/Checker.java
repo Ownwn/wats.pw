@@ -24,7 +24,13 @@ public class Checker {
 
     private static final Set<String> blacklistedKeywords = Set.of(
             "Robot",
-            "getProperty",
+            "Property",
+            "Properties",
+            "property",
+            "properties",
+            "java.lang.reflect",
+            "java.lang.management",
+            "java.lang.classfile",
             "env()",
             "gc()",
             "exit()",
@@ -46,8 +52,14 @@ public class Checker {
             "invoke",
             "reflect",
             "security",
+            "Security",
+            "Runtime",
+            "runtime",
             "sun.",
             "System.set",
+            "System.get",
+            "System.console",
+            "System.load",
             "MethodHandles",
             ".forName",
             "File",
@@ -67,7 +79,7 @@ public class Checker {
             "Native",
             "native",
             "JNI",
-            "exec("
+            "exec"
     );
 
     @PostMapping("check")
